@@ -1,0 +1,24 @@
+name: CI
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    name: OTP ${{matrix.otp-version}} / Elixir ${{matrix.elixir-version}}
+    strategy:
+      matrix:
+        otp-version: 22.0
+        elixir-version: 1.9.1
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@master
+      - name: Use actions/setup-elixir
+        uses: ./
+        with:
+          otp-version: ${{matrix.otp-version}}
+          elixir-version: ${{matrix.elixir-version}}
+      - name: runtests
+        run: |
+          cd kv
+          mix test
